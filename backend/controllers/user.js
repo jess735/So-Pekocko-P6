@@ -1,12 +1,15 @@
+// Ajout des packages suplémentaires
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const user = require('../models/user');
+// Import du modèle de l'utilisateur
+const User = require('../models/user');
 
+// Création d'un utilisateur non existant
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
       .then(hash => {
-        const user = new user({
+        const user = new User({
           email: req.body.email,
           password: hash
         });
@@ -17,8 +20,9 @@ exports.signup = (req, res, next) => {
       .catch(error => res.status(500).json({ error }));
   };
 
+// Récupération d'un utilisateur déja existant dans la base de donnée
   exports.login = (req, res, next) => {
-    user.findOne({ email: req.body.email })
+    User.findOne({ email: req.body.email })
       .then(user => {
         if (!user) {
           return res.status(401).json({ error: 'Utilisateur non trouvé !' });

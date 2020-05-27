@@ -1,7 +1,7 @@
+// Ajout des packages suplémentaires
 const mongoose = require('mongoose');
 
-//Model des sauces
-
+// Modèle des sauces
 const sauceSchema = mongoose.Schema({
   userId: {type: String, required: true},
   name: {type: String, required: true},
