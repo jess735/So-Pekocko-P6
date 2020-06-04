@@ -25,7 +25,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Traduit la requête en format Json
+// Rend les données du corps de la requête exploitable
 app.use(bodyParser.json());
 
 // Gestion de la ressource image en statique
