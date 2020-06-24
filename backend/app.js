@@ -12,7 +12,12 @@ const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 
 // Connection a la Base de Donnée MongoDB
-mongoose.connect('mongodb+srv://jess:35rennes35@clusterdejessica-bmvty.mongodb.net/test?retryWrites=true&w=majority',
+//& masquage des données grâce à DOTENV package.
+require("dotenv").config();
+const ID = process.env.ID;
+const MDP = process.env.MDP;
+
+mongoose.connect(`mongodb+srv://${ID}:${MDP}@clusterdejessica-bmvty.mongodb.net/test?retryWrites=true&w=majority`,
   { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
