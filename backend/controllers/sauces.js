@@ -4,11 +4,12 @@ const Sauce = require('../models/sauces');
 // Ajout du package FS pour la suppression
 const fs = require ('fs');
 
-// Création d'un sauce
+// Création d'une sauce
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
     const sauce = new Sauce({
+      /* ... opérateur spread permet de ne pas tous réecrire le body de la request */
       ...sauceObject,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
@@ -71,7 +72,7 @@ exports.likeSauce = (req, res, next) => {
               $pull: { usersLiked: req.body.userId },
               _id: req.params.id
             })
-              .then(() => { res.status(201).json({ message: 'Ton avis a été pris en compte!' }); })
+              .then(() => { res.status(201).json({ message: 'Ton Like a été retiré !' }); })
               .catch((error) => { res.status(400).json({ error: error }); });
 
               // Verification que l'utilisateur n'a pas déjà DISLIKER la sauce
@@ -81,7 +82,7 @@ exports.likeSauce = (req, res, next) => {
               $pull: { usersDisliked: req.body.userId },
               _id: req.params.id
             })
-              .then(() => { res.status(201).json({ message: 'Ton avis a été pris en compte!' }); })
+              .then(() => { res.status(201).json({ message: 'Ton Dislike a été retiré !' }); })
               .catch((error) => { res.status(400).json({ error: error }); });
           }
         })

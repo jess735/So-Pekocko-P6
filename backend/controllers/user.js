@@ -1,25 +1,39 @@
 // Ajout des packages suplémentaires
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const passwordValidator = require('../middleware/passwordValidator');
+const emailValidator = require('email-validator');
 
 // Import du modèle de l'utilisateur
 const User = require('../models/user');
 
+
 // Création d'un utilisateur non existant
 exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10)
+  let isValid = true;
+  let erreur = '';
+
+  if (!passwordValidator.validate(req.body.password)) {
+    isValid = false;
+    erreur = "Le mot de passe doit comporter au moins 8 caractères, dont au moins 1 minuscule, 1 majuscule et 1 chiffre.";
+  } 
+
+  if (!isValid) {
+      res.status(403).json({ message: "mot de passe insufisant" });
+  } else {
+      bcrypt.hash(req.body.password, 10)
       .then(hash => {
-        const user = new User({
-          email: req.body.email,
-          password: hash
-        });
-        user.save()
-          .then(() => res.status(201).json({ message: 'Utilisateur créé avec succès !' }))
-          .catch(error => res.status(400).json({ error }));
+          const user = new User({
+              email: req.body.email,
+              password: hash
+          });
+          user.save()
+              .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+              .catch(error => res.status(400).json({ error }));
       })
       .catch(error => res.status(500).json({ error }));
-  };
-
+  }
+};
 // Récupération d'un utilisateur déja existant dans la base de donnée
   exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -37,7 +51,7 @@ exports.signup = (req, res, next) => {
               token: jwt.sign(
                 { userId: user._id },
                 'RANDOM_TOKEN_SECRET',
-                { expiresIn: '24h' }
+                { expiresIn: '2h' }
               )
             });
           })
