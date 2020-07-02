@@ -8,7 +8,7 @@ const MIME_TYPES = {
      'image/png': 'png'
  };
 
-// Création d'une constante pour indiquer où enregistrer le fichier entrant
+// Création d'une constante pour indiquer où enregistrer le fichier entrant et avec un nom UNIQUE grace au timestamp
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, 'images')
